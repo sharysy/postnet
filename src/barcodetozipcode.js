@@ -4,6 +4,7 @@
 'use strict';
 let table = ['||:::', ':::||', '::|:|', '::||:', ':|::|', ':|:|:', ':||::', '|:::|', '|::|:', '|:|::'];
 
+//编码转条码
 function isLegalBarcode(barcode) {
     let arr = [];
     let barcodeArr = barcode.split("");
@@ -13,11 +14,7 @@ function isLegalBarcode(barcode) {
     } else {
         if (barcode.startsWith('| ') && barcode.endsWith(' |')) {
             arr = barcode.split(' ').slice(1, arr.length - 1);
-            if (arr.find((item)=>item.length !== 5)) {
-                return false;
-            } else {
-                return true;
-            }
+            return !arr.find((item)=>item.length !== 5);
         } else {
             return false;
         }
@@ -29,21 +26,18 @@ function formatBarcode(barcode) {
     return arr.slice(1, arr.length - 1);
 }
 
+
 function checkCheckcode(barcodeArr) {
     let zipcodeArr = barcodeArr.map((item)=>table.indexOf(item));
     let sum = zipcodeArr.reduce((pre, cur)=>pre + cur);
-    if (!(sum % 10)) {
-        return true;
-    } else {
-        return false;
-    }
+    return !(sum % 10);
 }
 
 function getZipcode(barcode) {
     let arr = barcode.map((item)=>table.indexOf(item));
-    let newArr = arr.slice(0, arr.length);
+    let newArr = arr.slice(0, arr.length-1);
     newArr.splice(5, 0, '-');
-    return newArr.join('').toLocaleString();
+    return newArr.join('').toLocaleString()+'\ncd:'+arr.pop();
 }
 
 function barcodeTraZipcode(barcode) {
@@ -54,16 +48,19 @@ function barcodeTraZipcode(barcode) {
         if (checked) {
             return getZipcode(formatedBarcode);
         }
+        else{
+            return "ERR:checkcode is false!V_V"
+        }
     }
     else {
-        return undefined;
+        return 'ERR:the input is illegal!V_V';
     }
 }
-let barcodeToZipcode = {
+//noinspection JSUnresolvedVariable
+module.exports = {
     isLegalBarcode: isLegalBarcode,
     formatBarcode: formatBarcode,
     checkCheckcode: checkCheckcode,
     getZipcode: getZipcode,
     barcodeTraZipcode: barcodeTraZipcode
 };
-module.exports = barcodeToZipcode;

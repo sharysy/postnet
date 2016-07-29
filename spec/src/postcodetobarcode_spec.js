@@ -3,13 +3,14 @@
  */
 'use strict';
 
+//noinspection JSUnresolvedFunction
 let postcodeToBarcode = require("../../src/postcodetobarcode.js");
 describe('is legal zipcode?', function () {
     it('legal zipcode', function () {
         let zipcode = '45056-1234';
         expect(postcodeToBarcode.isLegalZipcode(zipcode)).toBe(true);
     });
-
+    
     it('illegal zipcode', function () {
         let zipcode = '123';
         expect(postcodeToBarcode.isLegalZipcode(zipcode)).toBe(false);
@@ -41,6 +42,6 @@ describe('zipcode tra barcode', function () {
     });
     it('false', function () {
         let zipcode = '123';
-        expect(postcodeToBarcode.zipcodeTraBarcode(zipcode)).toBe(undefined);
+        expect(postcodeToBarcode.zipcodeTraBarcode(zipcode)).toBe('ERR:the input is illegal!V_V');
     });
 });

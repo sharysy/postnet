@@ -3,7 +3,7 @@
  */
 'use strict';
 let table = ['||:::', ':::||', '::|:|', '::||:', ':|::|', ':|:|:', ':||::', '|:::|', '|::|:', '|:|::'];
-
+//条码转编码
 function isLegalZipcode(zipcode) {
     return (zipcode.length === 5 || zipcode.length === 9 || zipcode.length === 10);
 }
@@ -12,11 +12,7 @@ function getCheckcode(zipcode) {
     let zipArr = zipcode.split('-').join('').split('');
     let arr = zipArr.map((item)=>parseInt(item));
     let sum = arr.reduce((pre, cur)=>pre + cur);
-    if (!(sum % 10)) {
-        zipArr.push(0);
-    } else {
-        zipArr.push((parseInt(sum / 10)) * 10 - sum);
-    }
+    zipArr.push((10 - sum % 10) % 10);
     return zipArr.join('');
 }
 
@@ -32,13 +28,13 @@ function zipcodeTraBarcode(zipcode) {
     if (isLegalZipcode(zipcode)) {
         return getBarcode(getCheckcode(zipcode));
     } else {
-        return undefined;
+        return 'ERR:the input is illegal!V_V';
     }
 }
-let postcodeToBarcode = {
+//noinspection JSUnresolvedVariable
+module.exports = {
     isLegalZipcode: isLegalZipcode,
     getCheckcode: getCheckcode,
     getBarcode: getBarcode,
     zipcodeTraBarcode: zipcodeTraBarcode
 };
-module.exports = postcodeToBarcode;
